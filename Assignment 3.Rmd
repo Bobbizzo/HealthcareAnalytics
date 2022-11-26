@@ -1,0 +1,107 @@
+---
+title: "AguerosR_Assignment3.doc"
+author: "Robert Agueros"
+date: "5/29/2021"
+output: word_document
+---
+
+Part A
+Numerical variable: A numerical variable is a number that holds value to it. A 
+good example for this would be numbers used in math like getting the sum of the 
+age of a group by adding all ages together. What is not a numerical variable
+would be something like a phone number. While they are numbers, they do not hold
+any numerical value or weight. 
+
+Categorical variable: A categorical variable consists of items like hair colors 
+such as black, brown, blonde... Another categorical variable example would be 
+gender of male, female, trans (male, female, or trans are the variable part of
+the category). Categorical variables do not have order to them. 
+
+Nominal variable: Description or labels with no order to them. Some examples are
+color and sex.They can be given a numerical code but does not imply any order is
+set with the numbers assigned. Numbers can not be calculated to produce a mean or 
+numerical value. 
+
+Ordinal variable: Ordinal variables are similar to categorical variables, but 
+with ordinal variables, you are able to order the variables. An example of this 
+would be to gather student survey for satisfaction as not satisfied, satisfied, 
+or very satisfied. We are able to order the results.  
+
+Binary variable: Describe opposites by assigning numbers such as 0 or 1. some 
+examples of binary variables include true/false, yes/no, male/female, cold/hot, 
+malignant/benign. 
+
+Dummy variable: A dummy variable is used to quantify a categorical variables that 
+have no relationship such as different types of color blindness. Example: 
+1 = protanopia, 2 = deuteranopia, and 3 = tritanopia. 
+
+
+PART B
+Q1: Download the dataset. Includes 569 examples of cancer biopsies, each with 
+32 features. 
+Q2: Load the data from your local drive to R. 
+```{r}
+Cancerdf<- read.csv("cancer_data.csv")
+```
+
+Q3: Display the first five observations, summary, and structure of the data. 
+```{r}
+head(Cancerdf, n=5 )
+summary(Cancerdf)
+str(Cancerdf)
+```
+
+Q4: Delete the ID columns since it does not provide useful information for prediction. Review 7.3.2, pg 272 
+```{r}
+Cancerdf <- Cancerdf[,-1]
+str(Cancerdf)
+```
+
+Q5: Normalize all predictor variables. (We use diagnosis as target/class variable and others as predictor variables) review 7.3.3, pg 273
+```{r}
+normalize<- function(x){
+  return((x-min(x))/(max(x)-min(x)))
+}
+
+#some test examples
+normalize(c(1,2,3,4,5))
+normalize(c(1,3,6,7,20))
+
+Cancerdf_n<-as.data.frame(lapply(Cancerdf[2:31], normalize))
+```
+
+Q6: Display summary again to see if all predictors' values are in the range of 0 to 1.
+```{r}
+summary(Cancerdf_n)
+```
+
+Q7: Randomly split the data into training and testing sets, with 80% observations in the training set and 20% in the testing set. 
+```{r}
+set.seed(35)
+cancer_train <-sample(nrow(Cancerdf_n), floor(nrow(Cancerdf_n)*0.8))
+cancer_train
+```
+
+Q8: Create four data frames for (1) training set predictors, (2) testing set predictors, (3) training set class variable, and (4) testing set class variable. The firs two only have predictor variables and the last two only have class variables. 
+```{r}
+C_train.df<- Cancerdf_n[cancer_train,]
+C_test.df<- Cancerdf_n[-cancer_train,]
+Cancer_train_labels <- Cancerdf[cancer_train, 1]
+Cancer_test_labels <- Cancerdf[-cancer_train, 1]
+```
+
+Q9: Using KNN algorithm with k=22 to predict class variable labels for the training set. 
+```{r}
+library(class)
+cancer_test_pred<- knn(train = C_train.df, test = C_test.df, cl = Cancer_train_labels, k=22)
+cancer_test_pred
+```
+
+Q10: Show a confusion matrix to evaluate the performance of the model. 
+```{r}
+library(gmodels)
+table <- CrossTable(x=Cancer_test_labels, y=cancer_test_pred, prop.chisq = FALSE)
+library(caret)
+confusionMatrix(as.factor(Cancer_test_labels), as.factor(cancer_test_pred))
+```
+

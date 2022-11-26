@@ -1,0 +1,94 @@
+---
+title: "AguerosR_Assignment2.doc"
+author: "Robert Agueros"
+date: "5/20/2021"
+output: word_document
+---
+Q1: Load the data
+```{r}
+df <- read.csv("https://stats.idre.ucla.edu/stat/data/rdm/patient_pt1_dm.csv")
+```
+
+Q2: Display the summary statistics of the data
+```{r}
+summary(df)
+```
+
+Q3: Convert the data type of wbc to numeric.
+```{r}
+df$wbc <- as.numeric(df$wbc)
+is.numeric(df$wbc)
+str(df)
+```
+
+Q4: Display a frequency table for each of the following categorical variables:
+sex, smokinghx, and familyhx. Do you find any invalid values?
+Invalid values: df$sex  is 12.2, df$smokinghx is -99, and df$familyhx is -99.
+```{r}
+table(df$sex)
+table(df$smokinghx)
+table(df$familyhx)
+```
+
+Q5: Display a boxplot for each of the following numerical variables: age, test1, 
+test2, co2, and lungcapacity. Do you find any invalid values? 
+Yes. Age: 357.89001, Test 1: -99.00000, Test2: -99.00000, Co2: -98, lungcapacity: -99 and -98.
+```{r}
+boxplot(df$age)
+boxplot.stats(df$age)
+boxplot(df$test1)
+boxplot.stats(df$test1)
+boxplot(df$test2)
+boxplot.stats(df$test2)
+boxplot(df$co2)
+boxplot.stats(df$co2)
+boxplot(df$lungcapacity)
+boxplot.stats(df$lungcapacity)
+```
+
+Q6: Recode all invalid values found in previous two steps as missing values (NA). 
+```{r}
+df$sex[df$sex==12.2] <- NA
+df$smokinghx[df$smokinghx== -99] <- NA
+df$familyhx[df$familyhx == -99] <- NA
+df$age[df$age == 357.8901] <- NA
+df$test1[df$test1 == -99.00000] <- NA
+df$test2[df$test2 == -99.00000] <- NA
+df$co2[df$co2 == -98] <- NA
+df$lungcapacity[df$lungcapacity == -99] <- NA
+df$lungcapacity[df$lungcapacity == -98] <- NA
+```
+
+Q7: Count the number of missing values in the dataset. 
+```{r}
+sum(is.na(df))
+```
+
+Q8: Use its mean to replace missing values for each numeric variable, and use
+it most frequent value to replace missing values for each categorical variable. 
+```{r}
+df$age[is.na(df$age)] <- mean(df$age, na.rm = TRUE)
+df$test1[is.na(df$test1)] <- mean(df$test1, na.rm = TRUE)
+df$test2[is.na(df$test2)] <- mean(df$test2, na.rm = TRUE)
+df$co2[is.na(df$co2)] <- mean(df$co2, na.rm = TRUE)
+df$lungcapacity[is.na(df$lungcapacity)] <- mean(df$lungcapacity, na.rm = TRUE)
+df$wbc[is.na(df$wbc)] <- mean(df$wbc, na.rm = TRUE)
+df$sex[is.na(df$sex)] <- "female"
+df$familyhx[is.na(df$familyhx)] <- "no"
+df$smokinghx[is.na(df$smokinghx)] <- "never"
+```
+
+Q9: Count the number of missing values again to ensures all of them have been replaced. 
+```{r}
+sum(is.na(df))
+```
+
+Q10: Redo the boxplots in step 5 to see what they look like after invalid values have been replaced. 
+```{r}
+boxplot(df$age)
+boxplot(df$test1)
+boxplot(df$test2)
+boxplot(df$co2)
+boxplot(df$lungcapacity)
+```
+
