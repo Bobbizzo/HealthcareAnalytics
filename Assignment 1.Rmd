@@ -1,0 +1,62 @@
+---
+title: "AguerosR_Assignment1.doc"
+author: "Robert Agueros"
+date: "5/12/2021"
+output: word_document
+---
+
+Q1: Load the data set
+```{r}
+df<-read.csv("https://stats.idre.ucla.edu/stat/data/rdm/patient_pt2_dm.csv"
+                  , header=TRUE)
+```
+
+Q2: Display the summary of the data
+```{r}
+summary(df)
+```
+
+Q3: Display the first six observations
+```{r}
+head(df)
+```
+
+Q4: Display observations where the patients' ages are greater than 50.
+```{r}
+sub <- subset(df, df$age>50)
+sub
+```
+
+Q5: Display only two columns of data: tumorsize and cancerstage
+```{r}
+dimnames <- df[c("tumorsize", "cancerstage")] 
+dimnames
+```
+Q6: Computer the mean age
+```{r}
+meanage <- mean(df$age)
+meanage
+```
+
+Q7: Compute the correlation between tumorsize and age
+```{r}
+cor(df$tumorsize, df$age)
+
+```
+
+Q8: Plot a histogram for bmi
+```{r}
+hist(df$bmi)
+```
+
+Q9: Plot a scatterplot for age and tumorsize
+```{r}
+plot(df$age, df$tumorsize)
+```
+
+Q10: Display frequency table for ntumors
+```{r}
+v <- c(df$ntumors)
+table(v)
+```
+
